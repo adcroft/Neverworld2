@@ -1,7 +1,6 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module MOM ===
-
 ENABLE_THERMODYNAMICS = False   !   [Boolean] default = True
                                 ! If true, Temperature and salinity are used as state variables.
 ADIABATIC = True                !   [Boolean] default = False
@@ -11,6 +10,10 @@ ADIABATIC = True                !   [Boolean] default = False
 THICKNESSDIFFUSE_FIRST = True   !   [Boolean] default = False
                                 ! If true, do thickness diffusion before dynamics. This is only used if
                                 ! THICKNESSDIFFUSE is true.
+DT = 1200.0                     !   [s]
+                                ! The (baroclinic) dynamics time step.  The time-step that is actually used will
+                                ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
+                                ! or the coupling timestep in coupled mode.)
 DTBT_RESET_PERIOD = 0.0         !   [s] default = 1200.0
                                 ! The period between recalculations of DTBT (if DTBT <= 0). If DTBT_RESET_PERIOD
                                 ! is negative, DTBT is set based only on information available at
@@ -20,6 +23,12 @@ SAVE_INITIAL_CONDS = True       !   [Boolean] default = False
                                 ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
 
 ! === module MOM_domains ===
+NIGLOBAL = 240                  !
+                                ! The total number of thickness grid points in the x-direction in the physical
+                                ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
+NJGLOBAL = 560                  !
+                                ! The total number of thickness grid points in the y-direction in the physical
+                                ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
 
 ! === module MOM_fixed_initialization ===
 
@@ -127,10 +136,6 @@ BBUILDER_008_PARS = 30.0, -70.0, 90.0, 20.0, 2000.0 !   [degrees_E,degrees_N,deg
                                 ! footprint radius, ridge height.
 MAXIMUM_DEPTH = 4000.0          !   [m]
                                 ! The maximum depth of the ocean.
-
-! === module MOM_open_boundary ===
-! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
-! if any.
 MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! The depth below which to mask points as land points, for which all fluxes are
                                 ! zeroed out. MASKING_DEPTH is ignored if negative.
@@ -346,6 +351,10 @@ WIND_SCURVES_TAUX = 0.0, 0.2, -0.1, -0.02, -0.1, 0.1, 14*0.0 !   [Pa]
 DT_FORCING = 8.64E+04           !   [s] default = 1200.0
                                 ! The time step for changing forcing, coupling with other components, or
                                 ! potentially writing certain diagnostics. The default value is given by DT.
+DAYMAX = 30.0                   !   [days]
+                                ! The final time of the whole simulation, in units of TIMEUNIT seconds.  This
+                                ! also sets the potential end time of the present run segment if the end time is
+                                ! not set via ocean_solo_nml in input.nml.
 RESTART_CONTROL = 3             ! default = 1
                                 ! An integer whose bits encode which restart files are written. Add 2 (bit 1)
                                 ! for a time-stamped file, and odd (bit 0) for a non-time-stamped file. A
